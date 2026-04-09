@@ -11,16 +11,16 @@
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
-      --bg: #060608;
-      --surface: #0d0d11;
-      --surface-hover: #13131a;
-      --border: #1a1a24;
-      --text: #e2e2ea;
-      --text-dim: #55556a;
-      --accent: #8b5cf6;
-      --accent-glow: rgba(139, 92, 246, 0.15);
-      --accent2: #06b6d4;
-      --warm: #f59e0b;
+      --bg: #080604;
+      --surface: #0f0d0a;
+      --surface-hover: #161310;
+      --border: #231f1a;
+      --text: #f0ede8;
+      --text-dim: #6b6058;
+      --accent: #f97316;
+      --accent-glow: rgba(249, 115, 22, 0.15);
+      --accent2: #f59e0b;
+      --warm: #fb923c;
       --mono: 'JetBrains Mono', monospace;
       --sans: 'Space Grotesk', sans-serif;
       --serif: 'Instrument Serif', serif;
@@ -41,54 +41,83 @@
 
     body::after {
       content: '';
-      position: fixed;
-      inset: 0;
-      z-index: 9999;
-      pointer-events: none;
-      opacity: 0.03;
+      position: fixed; inset: 0; z-index: 9999; pointer-events: none; opacity: 0.025;
       background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
       background-size: 200px;
     }
 
-    .orb { position: fixed; width: 600px; height: 600px; border-radius: 50%; filter: blur(120px); opacity: 0.07; pointer-events: none; z-index: 0; }
-    .orb-1 { background: var(--accent); top: -200px; right: -200px; }
-    .orb-2 { background: var(--accent2); bottom: -200px; left: -200px; }
+    body::before {
+      content: '';
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background-image: radial-gradient(circle, rgba(249,115,22,0.06) 1px, transparent 1px);
+      background-size: 32px 32px;
+    }
+
+    .orb { position: fixed; border-radius: 50%; filter: blur(120px); opacity: 0.09; pointer-events: none; z-index: 0; }
+    .orb-1 { width: 700px; height: 700px; background: var(--accent); top: -250px; right: -250px; }
+    .orb-2 { width: 600px; height: 600px; background: var(--accent2); bottom: -200px; left: -200px; }
+
+    .cursor-glow {
+      position: fixed; width: 400px; height: 400px; border-radius: 50%;
+      pointer-events: none; z-index: 0;
+      background: radial-gradient(circle, rgba(249,115,22,0.06) 0%, transparent 70%);
+      transform: translate(-50%, -50%); transition: opacity 0.3s;
+    }
 
     .container { max-width: 660px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
 
-    /* STATUS BAR */
-    .status-bar {
+    /* ── NAV ── */
+    .site-nav {
       position: fixed; top: 0; left: 0; right: 0; z-index: 100;
       padding: 14px 0;
-      background: rgba(6, 6, 8, 0.85);
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
+      background: rgba(8,6,4,0.85);
+      backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
       border-bottom: 1px solid var(--border);
     }
-    .status-bar .container { display: flex; justify-content: space-between; align-items: center; }
-    .status-left { display: flex; align-items: center; gap: 10px; }
-    .status-dot {
-      width: 8px; height: 8px; border-radius: 50%;
-      background: #22c55e;
-      box-shadow: 0 0 8px rgba(34,197,94,0.5);
-      animation: pulse 2s infinite;
+    .site-nav .container { display: flex; justify-content: space-between; align-items: center; }
+    .nav-logo { font-family: var(--mono); font-size: 13px; color: var(--accent); text-decoration: none; }
+    .nav-links { display: flex; gap: 20px; }
+    .nav-links a {
+      font-family: var(--mono); font-size: 11px; color: var(--text-dim);
+      text-decoration: none; transition: color 0.3s; text-transform: lowercase;
     }
-    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
-    .status-text { font-family: var(--mono); font-size: 12px; color: var(--text-dim); }
-    .status-links { display: flex; gap: 20px; }
-    .status-links a { font-family: var(--mono); font-size: 11px; color: var(--text-dim); text-decoration: none; transition: color 0.3s; text-transform: lowercase; }
-    .status-links a:hover { color: var(--accent); }
+    .nav-links a:hover { color: var(--accent); }
 
-    /* HERO */
+    /* ── HERO ── */
     .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding-top: 60px; }
-    .hero-tag { font-family: var(--mono); font-size: 13px; color: var(--accent); margin-bottom: 20px; opacity:0; animation: fadeUp 0.6s 0.1s forwards; }
-    .hero h1 { font-size: clamp(36px,7vw,60px); font-weight: 700; line-height: 1.1; letter-spacing: -0.03em; margin-bottom: 24px; opacity:0; animation: fadeUp 0.6s 0.25s forwards; }
-    .hero h1 em { font-family: var(--serif); font-style: italic; font-weight: 400; color: var(--accent); }
-    .hero-bio { font-size: 16px; color: var(--text-dim); max-width: 500px; line-height: 1.9; opacity:0; animation: fadeUp 0.6s 0.4s forwards; }
+    .hero-tag {
+      font-family: var(--mono); font-size: 13px; color: var(--accent);
+      margin-bottom: 20px; opacity: 0; animation: fadeUp 0.6s 0.1s forwards;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .hero-tag::after {
+      content: ''; flex: 1; max-width: 60px; height: 1px;
+      background: linear-gradient(90deg, var(--accent), transparent);
+    }
+    .hero h1 {
+      font-size: clamp(36px,7vw,62px); font-weight: 700;
+      line-height: 1.1; letter-spacing: -0.03em; margin-bottom: 24px;
+      opacity: 0; animation: fadeUp 0.6s 0.25s forwards;
+    }
+    .hero h1 em {
+      font-family: var(--serif); font-style: italic; font-weight: 400;
+      color: var(--accent);
+    }
+    .hero-bio {
+      font-size: 16px; color: var(--text-dim); max-width: 500px;
+      line-height: 1.9; opacity: 0; animation: fadeUp 0.6s 0.4s forwards;
+    }
     .hero-bio strong { color: var(--text); font-weight: 500; }
 
-    /* SOCIALS */
-    .socials-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 40px; opacity:0; animation: fadeUp 0.6s 0.55s forwards; }
+    /* Stack line */
+    .stack-line {
+      margin-top: 32px; opacity: 0; animation: fadeUp 0.6s 0.45s forwards;
+      font-family: var(--mono); font-size: 12px; color: var(--text-dim);
+    }
+    .stack-line span { color: var(--warm); margin-right: 4px; }
+
+    /* Socials */
+    .socials-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; opacity: 0; animation: fadeUp 0.6s 0.55s forwards; }
     .social-chip {
       display: inline-flex; align-items: center; gap: 8px;
       padding: 8px 16px; border: 1px solid var(--border); border-radius: 8px;
@@ -98,7 +127,7 @@
     .social-chip:hover {
       border-color: var(--accent); color: var(--text);
       background: var(--accent-glow); transform: translateY(-2px);
-      box-shadow: 0 4px 20px rgba(139,92,246,0.1);
+      box-shadow: 0 4px 20px rgba(249,115,22,0.15);
     }
     .social-chip svg { width: 15px; height: 15px; fill: currentColor; flex-shrink: 0; }
 
@@ -109,13 +138,16 @@
     .section-heading { font-size: clamp(24px,4vw,34px); font-weight: 600; letter-spacing: -0.02em; margin-bottom: 16px; }
     .section-sub { color: var(--text-dim); font-size: 15px; margin-bottom: 48px; max-width: 480px; }
 
-    /* ABOUT */
+    /* ── ABOUT ── */
     .about-block {
       border: 1px solid var(--border); border-radius: 16px;
       background: var(--surface); padding: 36px;
       position: relative; overflow: hidden;
     }
-    .about-block::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; background: linear-gradient(90deg, var(--accent), var(--accent2), var(--warm)); }
+    .about-block::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2), transparent);
+    }
     .about-content p { color: var(--text-dim); font-size: 15px; margin-bottom: 16px; line-height: 1.85; }
     .about-content p:last-child { margin-bottom: 0; }
     .highlight { color: var(--text); font-weight: 500; }
@@ -123,35 +155,87 @@
     .tldr { margin-top: 28px; padding-top: 24px; border-top: 1px solid var(--border); font-family: var(--mono); font-size: 12px; color: var(--text-dim); }
     .tldr span { color: var(--warm); font-weight: 500; }
 
+    .tech-badges { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; }
+    .tech-badge {
+      font-family: var(--mono); font-size: 11px; padding: 5px 12px; border-radius: 20px;
+      background: rgba(249,115,22,0.06); border: 1px solid rgba(249,115,22,0.15); color: var(--warm);
+      transition: all 0.2s;
+    }
+    .tech-badge:hover { background: rgba(249,115,22,0.12); border-color: rgba(249,115,22,0.3); transform: translateY(-1px); }
+
     .currently { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 48px; }
-    .currently-item { border: 1px solid var(--border); border-radius: 10px; padding: 18px; background: var(--surface); }
+    .currently-item {
+      border: 1px solid var(--border); border-radius: 12px; padding: 20px; background: var(--surface);
+      transition: all 0.25s;
+    }
+    .currently-item:hover { border-color: rgba(249,115,22,0.2); transform: translateY(-2px); }
     .currently-label { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-dim); margin-bottom: 6px; }
     .currently-value { font-size: 14px; font-weight: 500; color: var(--text); }
     .currently-value .dim { color: var(--text-dim); font-weight: 400; }
 
-    /* PROJECTS */
+    /* ── PROJECTS ── */
     .projects-list { display: grid; gap: 14px; }
     .project {
       display: block; text-decoration: none; color: inherit;
       border: 1px solid var(--border); border-radius: 14px;
       padding: 28px 32px; background: var(--surface);
-      transition: all 0.3s cubic-bezier(0.16,1,0.3,1); position: relative;
+      transition: all 0.3s cubic-bezier(0.16,1,0.3,1);
+      position: relative; overflow: hidden;
     }
-    .project:hover { background: var(--surface-hover); border-color: #252536; transform: translateY(-3px); box-shadow: 0 12px 40px rgba(0,0,0,0.3); }
+    .project::before {
+      content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+      width: 3px; background: linear-gradient(180deg, var(--accent), var(--accent2));
+      border-radius: 4px 0 0 4px; opacity: 0; transition: opacity 0.3s;
+    }
+    .project:hover { background: var(--surface-hover); border-color: rgba(249,115,22,0.2); transform: translateY(-3px); box-shadow: 0 12px 40px rgba(249,115,22,0.08); }
+    .project:hover::before { opacity: 1; }
     .project-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
     .project-title { font-size: 17px; font-weight: 600; display: flex; align-items: center; gap: 10px; }
     .project-title .emoji { font-size: 20px; }
-    .project-link-icon { color: var(--text-dim); font-size: 16px; transition: all 0.3s; }
+    .project-link-icon { color: var(--text-dim); font-size: 18px; transition: all 0.3s; }
     .project:hover .project-link-icon { color: var(--accent); transform: translate(3px,-3px); }
     .project-desc { color: var(--text-dim); font-size: 14px; line-height: 1.7; margin-bottom: 16px; }
     .project-stack { display: flex; flex-wrap: wrap; gap: 6px; }
-    .chip { font-family: var(--mono); font-size: 10px; padding: 3px 10px; border-radius: 6px; background: rgba(139,92,246,0.08); color: var(--accent); border: 1px solid rgba(139,92,246,0.12); }
+    .chip { font-family: var(--mono); font-size: 10px; padding: 3px 10px; border-radius: 6px; background: rgba(249,115,22,0.07); color: var(--warm); border: 1px solid rgba(249,115,22,0.12); }
     .project-note { font-family: var(--mono); font-size: 11px; color: var(--text-dim); margin-top: 12px; font-style: italic; opacity: 0.6; }
 
+    /* ── FAQ ── */
+    .faq-list { display: grid; gap: 10px; }
+    .faq-item {
+      border: 1px solid var(--border); border-radius: 12px;
+      background: var(--surface); overflow: hidden;
+      transition: border-color 0.25s;
+    }
+    .faq-item.open { border-color: rgba(249,115,22,0.25); }
+    .faq-q {
+      width: 100%; background: none; border: none; cursor: pointer; color: var(--text);
+      font-family: var(--sans); font-size: 15px; font-weight: 500;
+      padding: 22px 28px; text-align: left;
+      display: flex; justify-content: space-between; align-items: center; gap: 16px;
+      transition: color 0.2s;
+    }
+    .faq-q:hover { color: var(--warm); }
+    .faq-icon {
+      flex-shrink: 0; width: 20px; height: 20px; border-radius: 50%;
+      border: 1px solid var(--border); display: flex; align-items: center; justify-content: center;
+      font-size: 14px; color: var(--text-dim); transition: all 0.3s; line-height: 1;
+    }
+    .faq-item.open .faq-icon { background: var(--accent-glow); border-color: var(--accent); color: var(--accent); transform: rotate(45deg); }
+    .faq-a {
+      max-height: 0; overflow: hidden;
+      transition: max-height 0.35s cubic-bezier(0.16,1,0.3,1), padding 0.35s;
+      padding: 0 28px;
+    }
+    .faq-item.open .faq-a { max-height: 400px; padding: 0 28px 22px; }
+    .faq-a p { color: var(--text-dim); font-size: 14px; line-height: 1.85; }
+    .faq-a .answer-placeholder { color: var(--text-dim); font-style: italic; opacity: 0.5; font-family: var(--mono); font-size: 12px; }
+
+    /* ── FOOTER ── */
     footer { padding: 40px 0 60px; border-top: 1px solid var(--border); }
     .footer-inner { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
     .footer-msg { font-family: var(--mono); font-size: 12px; color: var(--text-dim); }
-    .footer-msg a { color: var(--accent); text-decoration: none; }
+    .footer-msg a { color: var(--accent); text-decoration: none; transition: opacity 0.2s; }
+    .footer-msg a:hover { opacity: 0.8; }
     .footer-right { font-family: var(--mono); font-size: 11px; color: var(--text-dim); opacity: 0.4; }
 
     @keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
@@ -165,22 +249,26 @@
       section { padding: 72px 0; }
       .about-block { padding: 24px; }
       .project { padding: 22px; }
+      .faq-q { padding: 18px 20px; }
+      .faq-a { padding: 0 20px; }
+      .faq-item.open .faq-a { padding: 0 20px 18px; }
     }
   </style>
 </head>
 <body>
+
+
+<div class="cursor-glow" id="cursorGlow"></div>
   <div class="orb orb-1"></div>
   <div class="orb orb-2"></div>
 
-  <nav class="status-bar">
+  <nav class="site-nav">
     <div class="container">
-      <div class="status-left">
-        <div class="status-dot"></div>
-        <span class="status-text">probably online</span>
-      </div>
-      <div class="status-links">
+      <a href="#" class="nav-logo">beanz</a>
+      <div class="nav-links">
         <a href="#about">about</a>
         <a href="#projects">stuff i made</a>
+        <a href="#faq">faq</a>
       </div>
     </div>
   </nav>
@@ -188,13 +276,16 @@
   <section class="hero">
     <div class="container">
       <div class="hero-tag">// hey, you found me</div>
-      <h1>i'm beanz (or eray if you are damn nerd).<br>i make things(i guess?).</h1>
+      <h1>i'm beanz (or eray if you are damn nerd). i make <em>things</em> (i guess?).</h1>
       <p class="hero-bio">
         developer, tinkerer, and professional googler.
         i build stuff that <strong>sometimes works</strong>,
         break things that definitely shouldn't have been touched,
         and occasionally ship something i'm actually proud of.
         (though probably never)
+      </p>
+      <p class="stack-line">
+        <span>//</span> python · c# · javascript · java · html/css · linux · git
       </p>
       <div class="socials-row">
         <a href="https://github.com/Erayegeekalkann" class="social-chip" target="_blank">
@@ -236,8 +327,17 @@
             three times, or arguing about something completely pointless on discord.
           </p>
         </div>
+        <div class="tech-badges">
+          <span class="tech-badge">python</span>
+          <span class="tech-badge">c#</span>
+          <span class="tech-badge">javascript</span>
+          <span class="tech-badge">java</span>
+          <span class="tech-badge">html/css</span>
+          <span class="tech-badge">linux</span>
+          <span class="tech-badge">git</span>
+        </div>
         <div class="tldr">
-          <span>tl;dr:</span> i make things for the internet. some of them even work. Shocking, i know.
+          <span>tl;dr:</span> i make things for the internet. some of them even work. shocking, i know.
         </div>
       </div>
 
@@ -248,7 +348,7 @@
         </div>
         <div class="currently-item">
           <div class="currently-label">🎮 playing</div>
-          <div class="currently-value">proabably CS</div>
+          <div class="currently-value">probably CS</div>
         </div>
         <div class="currently-item">
           <div class="currently-label">🎵 listening to</div>
@@ -276,11 +376,11 @@
       <div class="projects-list">
         <a href="#" class="project reveal">
           <div class="project-top">
-            <span class="project-title">program downloder</span>
+            <span class="project-title"><span class="emoji">🐍</span> program downloader</span>
             <span class="project-link-icon">↗</span>
           </div>
           <p class="project-desc">
-            a python script to download the stuff i need when i delete my harddrive and/or distrohop
+            a python script to download the stuff i need when i delete my harddrive and/or distro-hop
           </p>
           <div class="project-stack">
             <span class="chip">python</span>
@@ -290,11 +390,11 @@
 
         <a href="#" class="project reveal">
           <div class="project-top">
-            <span class="project-title">tamagochi to-do</span>
+            <span class="project-title"><span class="emoji">🐣</span> tamagochi to-do</span>
             <span class="project-link-icon">↗</span>
           </div>
           <p class="project-desc">
-            a tamagochi that you take care by doing chores you add
+            a tamagochi that you take care of by doing chores you add
           </p>
           <div class="project-stack">
             <span class="chip">C#</span>
@@ -305,30 +405,147 @@
     </div>
   </section>
 
+  <hr class="divider container">
+
+  <section id="faq">
+    <div class="container">
+      <div class="section-tag reveal">// things people ask</div>
+      <h2 class="section-heading reveal">faq</h2>
+      <p class="section-sub reveal">real questions, probably real answers.</p>
+
+      <div class="faq-list">
+
+        <div class="faq-item reveal">
+          <button class="faq-q">
+            what do you actually do?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-a">
+            <p class="answer-placeholder">I basically do web development and programming on my free time after my school hours. i also like to try to make some mods (though i never finish them).</p>
+          </div>
+        </div>
+
+        <div class="faq-item reveal">
+          <button class="faq-q">
+            what languages and tools do you use?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-a">
+            <p class="answer-placeholder">I primarily use Python, JavaScript, and C#. For web development, I use HTML, CSS, and frameworks like React. I also use Git for version control and VS Code as my main editor. i also use AI tools for assistance on where i get stuck.</p>
+          </div>
+        </div>
+
+        <div class="faq-item reveal">
+          <button class="faq-q">
+            how did you get into coding?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-a">
+            <p class="answer-placeholder">i mostly got into it cause i wanted to make my own games. i started around 4 with <i>goddamn scratch.</i> i was terrible at it but i enjoyed making the computer do what i told it to do</p>
+          </div>
+        </div>
+
+        <div class="faq-item reveal">
+          <button class="faq-q">
+            are you open to working on projects together?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-a">
+            <p class="answer-placeholder">of course! just a heads up, i am <b>very</b> disorganized cause of my ADHD but i can help if you are fine with a chaos spawn of a dude.</p>
+          </div>
+        </div>
+
+        <div class="faq-item reveal">
+          <button class="faq-q">
+            how do i reach you?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-a">
+            <p class="answer-placeholder">you can write me on discord or send me a email at <i>eray123ege123@gmail.com</i> but you have a better luck with discord cause of how messey my mails are!</p>
+          </div>
+        </div>
+
+        <div class="faq-item reveal">
+          <button class="faq-q">
+            why "beanz"?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-a">
+            <p class="answer-placeholder">i actually dont even know when i started using it, i think i stared using the word "beans" a lot as a joke (i know <i>great humor from me</i>) cause of a russianbadger clip that are <a href="https://www.youtube.com/watch?v=KISyvw2Dowk">this</a> and <a href="https://www.youtube.com/watch?v=JGVZA3uIRQ4">this</a> i know, i know, i hate my humor too but youll get used to it (hopefully...)</p>
+          </div>
+        </div>
+
+        <div class="faq-item reveal">
+          <button class="faq-q">
+            what's your setup like?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-a">
+            <p class="answer-placeholder">its just a damn laptop bro. i dont have money to get a "setup" i am a broke student with debt and living in damn turkey for crying out loud!</p>
+          </div>
+        </div>
+
+        <div class="faq-item reveal">
+          <button class="faq-q">
+            any advice for someone learning to code?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-a">
+            <p class="answer-placeholder">i know this will be controversial but i belive that you should go for your biggest project first. you will probably wont even make a dent in the project <b>BUT</b> cause you had to force yourself to learn how to do the big boy stuff now smaller projects are FAR more easier to complete. in short, just do whatever you want to do and then start googling stuff and maybe use claude to help you (just make sure to read the code so you can actually learn from it and not just be a prompt writer)</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
   <footer>
     <div class="container">
       <div class="footer-inner">
         <div class="footer-msg">
           built by me, with too much caffeine — <a href="https://github.com/Erayegeekalkann" target="_blank">source</a>
         </div>
-        <div class="footer-right"> copyright lolololol</div>
+        <div class="footer-right">copyright lolololol</div>
       </div>
     </div>
   </footer>
 
   <script>
-    const observer = new IntersectionObserver((entries) => {
+    // ── SCROLL REVEAL ──────────────────────────────
+    const revealObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           entry.target.classList.add('visible');
-          observer.unobserve(entry.target);
+          revealObserver.unobserve(entry.target);
         }
       });
     }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
     document.querySelectorAll('.reveal').forEach((el, i) => {
-      el.style.transitionDelay = `${i * 0.06}s`;
-      observer.observe(el);
+      el.style.transitionDelay = `${i * 0.05}s`;
+      revealObserver.observe(el);
     });
+
+    // ── MOUSE GLOW ─────────────────────────────────
+    const glow = document.getElementById('cursorGlow');
+    document.addEventListener('mousemove', (e) => {
+      glow.style.left = e.clientX + 'px';
+      glow.style.top  = e.clientY + 'px';
+    });
+    document.addEventListener('mouseleave', () => { glow.style.opacity = '0'; });
+    document.addEventListener('mouseenter', () => { glow.style.opacity = '1'; });
+
+    // ── FAQ ACCORDION ──────────────────────────────
+    document.querySelectorAll('.faq-q').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const item = btn.closest('.faq-item');
+        const isOpen = item.classList.contains('open');
+        // close all
+        document.querySelectorAll('.faq-item.open').forEach(el => el.classList.remove('open'));
+        // open clicked one if it wasn't already open
+        if (!isOpen) item.classList.add('open');
+      });
+    });
+
   </script>
 </body>
 </html>
